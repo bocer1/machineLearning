@@ -74,8 +74,10 @@ class ParamExtractor:
         # it was decided that the attribute is the min temp and the label is the maxTemp
         x = dataset[[self._feature_name]].values  # .reshape(-1,1)
         y = dataset[self._label_name].values  # .reshape(-1,1)
-        polynomial_features = PolynomialFeatures(degree=2)
-        x = polynomial_features.fit_transform(x)
+
+        # polynomial_features = PolynomialFeatures(degree=2)
+        # x = polynomial_features.fit_transform(x)
+
         return train_test_split(x, y, test_size=self._test_size, random_state=self._random_state)
 
 
