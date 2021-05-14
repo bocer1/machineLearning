@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from enum import IntEnum, unique
+from sklearn.ensemble import GradientBoostingRegressor
 
 
 @unique
@@ -24,6 +25,7 @@ class Explorer:
 
         pd.set_option('display.max.columns', None)
         self._dataset = pd.read_csv(self._filename, low_memory=False)
+        print(self._dataset.corr().to_csv(filename.replace('.', '.corr.')))
 
         self._dataset_stats = self._dataset.describe()
         self._dataset_stats.to_csv(filename.replace('.', '.stats.'))
@@ -84,11 +86,13 @@ class ParamExtractor:
 class Trainer:
     def __init__(self):
         self._models = {
-            'linear_regression': LinearRegression()
+            'linear_regression': LinearRegression(),
+            'gradient_boosting': GradientBoostingRegressor(learning_rate=0.3, n_estimators=102)
         }
 
     def train(self, x_train, y_train, algorithm):
         # create a trainer using linear regression algorithm
+        print(self._models['gradient_boosting'])
         model = self._models['linear_regression']
         model.fit(x_train, y_train)
 

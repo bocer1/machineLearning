@@ -1,47 +1,61 @@
-#! /Users/tizzdale27/opt/anaconda3/bin/python
-import sys
-from tp_machine_learning import (Explorer, ParamExtractor, Trainer, ModelEvaluator, Phase)
+# import required libraries
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
+
+colors = pd.read_csv('data/color.csv', low_memory=False)
+print('\n\n****** Colors ******')
+print(colors)
+
+phones = pd.read_csv('data/phone.csv', low_memory=False)
+print('\n\n****** Phones ******')
+print(phones)
+
+print('\n\n****** Merged ******')
+merged = phones.merge(colors)
+del(merged['Color'])
+print(merged)
+
+# creating initial dataframe
+#color_df = pd.DataFrame(colors, columns=['Color'])
+# converting type of columns to 'category'
+#color_df['Bridge_Types'] = color_df['Bridge_Types'].astype('category')
+# Assigning numerical values and storing in another column
+#bridge_df['Bridge_Types_Cat'] = bridge_df['Bridge_Types'].cat.codes
+#print('\n\n***** Converting columns to categories *****')
+#print(bridge_df)
 
 
-class MLRunner:
-    def __init__(self, filename='data/Weather.csv'):
-        self._filename = filename
-        self._label_name = 'MaxTemp'
-        self._phase = Phase.MODEL_EVALUATION
 
-    # main program
-    def run(self):
-        try:
-            # read data and perform exploration
-            e = Explorer(self._filename)
-            feature_name = 'MeanTemp'
-            dataset, _ = e.explore_data(feature_name, self._label_name)
-
-            # decide on the features and label to use for training
-            if self._phase >= Phase.PARAMETER_EXTRACTION:
-                pe = ParamExtractor(feature_name, self._label_name, test_size=0.2, random_state=0)
-                training_input, inputs, training_output, actual_outputs = pe.extract(dataset)
-
-            # split the data into testing and training sets then train the model (using linear regression)
-            if self._phase >= Phase.MODEL_TRAINING:
-                t = Trainer()
-                model = t.train(training_input, training_output, 'linear_regression')
-
-            # Make predictions, feed test attributes to retrieve the predicted labels
-            if self._phase >= Phase.PREDICTION:
-                predicted_outputs = model.predict(inputs)
-
-            # Evaluate model by viewing, comparing and analyzing predicted vs actual
-            if self._phase >= Phase.MODEL_EVALUATION:
-                me = ModelEvaluator(inputs, actual_outputs, predicted_outputs)
-                me.evaluate()
-        except FileNotFoundError as e:
-            print(f'Input file \'{self._filename}\' is not available.\nDetails: {e!r}')
+# creating initial dataframe
+#bridge_types = ('Arch','Beam','Truss','Cantilever','Tied Arch','Suspension','Cable')
+#bridge_df = pd.DataFrame(bridge_types, columns=['Bridge_Types'])
+# creating instance of labelencoder
+#labelencoder = LabelEncoder()
+# Assigning numerical values and storing in another column
+#bridge_df['Bridge_Types_Cat'] = labelencoder.fit_transform(bridge_df['Bridge_Types'])
+#print('\n\n***** Label Encoder *****')
+#print(bridge_df)
 
 
-if __name__ == "__main__":
-    file_name = 'data/Weather.csv'
-    if len(sys.argv) > 1:
-        file_name = sys.argv[1]
-    r = MLRunner(file_name)
-    r.run()
+from sklearn.preprocessing import OneHotEncoder
+# creating instance of one-hot-encoder
+#enc = OneHotEncoder(handle_unknown='ignore')
+# passing bridge-types-cat column (label encoded values of bridge_types)
+#enc_df = pd.DataFrame(enc.fit_transform(bridge_df[['Bridge_Types_Cat']]).toarray())
+# merge with main df bridge_df on key values
+#bridge_df = bridge_df.join(enc_df)
+#print('\n\n***** One Hot Encoding *****')
+#print(bridge_df)
+
+
+# creating initial dataframe
+#bridge_types = ('Arch','Beam','Truss','Cantilever','Tied Arch','Suspension','Cable')
+#bridge_df = pd.DataFrame(bridge_types, columns=['Bridge_Types'])
+# generate binary values using get_dummies
+#dum_df = pd.get_dummies(bridge_df, columns=["Bridge_Types"], prefix=["Type_is"] )
+# merge with main df bridge_df on key values
+#bridge_df = bridge_df.join(dum_df)
+#bridge_df.to_csv('bridge_dummy.csv')
+#print('\n\n***** Using Dummy Values *****')
+#print(bridge_df)
